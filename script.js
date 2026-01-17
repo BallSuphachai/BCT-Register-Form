@@ -58,12 +58,23 @@ document.addEventListener('DOMContentLoaded', () => {
         // or just the name if logic requires more complex handling.
         // For a robust solution, we'd upload to Drive separately, but here we'll try to bundle.
         if (photoInput.files.length > 0) {
+            const file = photoInput.files[0];
+            // Validate File Size (Max 2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                alert('ไฟล์รูปภาพมีขนาดใหญ่เกินไป (ต้องไม่เกิน 2MB)');
+                loadingModal.style.display = 'none';
+                return;
+            }
+
             try {
-                const base64 = await toBase64(photoInput.files[0]);
+                const base64 = await toBase64(file);
                 data['studentPhotoBase64'] = base64; // Send base64 data
-                data['studentPhotoName'] = photoInput.files[0].name;
+                data['studentPhotoName'] = file.name;
             } catch (error) {
                 console.error("Error converting image", error);
+                alert('เกิดข้อผิดพลาดในการอ่านไฟล์รูปภาพ');
+                loadingModal.style.display = 'none';
+                return;
             }
         }
 
@@ -79,16 +90,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 showSuccess();
             } else {
                 // Use no-cors mode to allow submission from file:// and arbitrary domains
-                await fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    cache: 'no-cache',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    redirect: 'follow',
-                    body: JSON.stringify(data)
-                });
+                // Add timeout to prevent hanging
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 seconds timeout
+
+                try {
+                    await fetch(SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        cache: 'no-cache',
+                        headers: {
+                            'Content-Type': 'text/plain' // Use text/plain for no-cors to avoid preflight issues
+                        },
+                        redirect: 'follow',
+                        body: JSON.stringify(data),
+                        signal: controller.signal
+                    });
+                    clearTimeout(timeoutId);
+                    showSuccess();
+                } catch (fetchError) {
+                    clearTimeout(timeoutId);
+                    if (fetchError.name === 'AbortError') {
+                        throw new Error('การเชื่อมต่อหมดเวลา (Request Timeout) - กรุณาตรวจสอบอินเทอร์เน็ต');
+                    }
+                    throw fetchError;
+                }
 
                 // With 'no-cors', we cannot access the response status or body.
                 // We assume if the fetch didn't throw a network error, it was sent.

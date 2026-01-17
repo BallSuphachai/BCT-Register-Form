@@ -128,7 +128,7 @@ function doPost(e) {
             var blob = Utilities.newBlob(bytes, contentType, data.studentPhotoName || 'upload.png');
 
             var file;
-            if (FOLDER_ID && FOLDER_ID !== '19MFUpbFbd_pwzKi3v-KIj4dE0xBZeQor') {
+            if (FOLDER_ID) {
                 try {
                     var folder = DriveApp.getFolderById(FOLDER_ID);
                     file = folder.createFile(blob);
