@@ -2,40 +2,96 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('registrationForm');
     const loadingModal = document.getElementById('loadingModal');
     const successModal = document.getElementById('successModal');
-    const photoInput = document.getElementById('studentPhoto');
-    const photoPreview = document.getElementById('photoPreview');
     const applyDateInput = document.getElementById('applyDate');
+    const academicYearInput = document.getElementById('academicYear');
 
-    // --- Set Current Date ---
+    // --- Set Current Date & Academic Year ---
+    const today = new Date();
+
+    // Set Apply Date
     if (applyDateInput) {
-        const today = new Date();
         const year = today.getFullYear();
         const month = String(today.getMonth() + 1).padStart(2, '0');
         const day = String(today.getDate()).padStart(2, '0');
         const formattedDate = `${year}-${month}-${day}`;
         applyDateInput.value = formattedDate;
-        applyDateInput.defaultValue = formattedDate;
     }
+
+    // Set Academic Year (Thai Year)
+    if (academicYearInput) {
+        // Current Thai Year is Gregorian Year + 543
+        const thaiYear = today.getFullYear() + 543;
+        academicYearInput.value = thaiYear;
+    }
+
+    // --- Prefix Logic ---
+    const prefixSelect = document.getElementById('prefix');
+    const prefixOtherInput = document.getElementById('prefixOther');
+
+    if (prefixSelect && prefixOtherInput) {
+        prefixSelect.addEventListener('change', () => {
+            if (prefixSelect.value === 'other') {
+                prefixOtherInput.style.display = 'block';
+                prefixOtherInput.required = true;
+            } else {
+                prefixOtherInput.style.display = 'none';
+                prefixOtherInput.required = false;
+                prefixOtherInput.value = '';
+            }
+        });
+    }
+
+    // --- Vocational Major Logic ---
+    const vocationalRadios = document.querySelectorAll('input[name="vocationalType"]');
+    const majorBusinessInput = document.getElementById('vocationalMajorBusiness');
+    const majorTechnicalInput = document.getElementById('vocationalMajorTechnical');
+    const labelMajorBusiness = document.getElementById('labelMajorBusiness');
+    const labelMajorTechnical = document.getElementById('labelMajorTechnical');
+
+    function updateVocationalInputs() {
+        // Reset both first
+        if (majorBusinessInput) {
+            majorBusinessInput.style.display = 'none';
+            majorBusinessInput.required = false;
+        }
+        if (majorTechnicalInput) {
+            majorTechnicalInput.style.display = 'none';
+            majorTechnicalInput.required = false;
+        }
+        if (labelMajorBusiness) labelMajorBusiness.style.display = 'none';
+        if (labelMajorTechnical) labelMajorTechnical.style.display = 'none';
+
+        const selected = document.querySelector('input[name="vocationalType"]:checked');
+        if (selected) {
+            if (selected.value === 'สายบริหารธุรกิจ') {
+                if (majorBusinessInput) {
+                    majorBusinessInput.style.display = 'block';
+                    majorBusinessInput.required = true;
+                }
+                if (labelMajorBusiness) labelMajorBusiness.style.display = 'inline';
+            } else if (selected.value === 'สายช่าง') {
+                if (majorTechnicalInput) {
+                    majorTechnicalInput.style.display = 'block';
+                    majorTechnicalInput.required = true;
+                }
+                if (labelMajorTechnical) labelMajorTechnical.style.display = 'inline';
+            }
+        }
+    }
+
+    vocationalRadios.forEach(radio => {
+        radio.addEventListener('change', updateVocationalInputs);
+    });
 
     // --- Configuration ---
     // IMPORTANT: The user must replace this URL with their own web app URL after deployment
     const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw6Rc2AjcOo7GW4bAdhiuLKjLmrjHiSkZ0rZMB1z2-YRniIAlz4efwphpkaitv2o9Eg1g/exec';
 
-    // --- Image Preview ---
-    photoInput.addEventListener('change', function (e) {
-        if (this.files && this.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function (e) {
-                photoPreview.innerHTML = `<img src="${e.target.result}" style="max-width: 100%; max-height: 100%; border-radius: 10px;">`;
-            }
-            reader.readAsDataURL(this.files[0]);
-        }
-    });
-
     // --- Form Submission ---
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
+        // Custom validation check (if needed beyond HTML5)
         if (!form.checkValidity()) {
             form.reportValidity();
             return;
@@ -48,51 +104,27 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData(form);
         const data = {};
 
-        // Convert FormData to JSON object
         formData.forEach((value, key) => {
             data[key] = value;
         });
 
-        // Handle File (Convert to Base64 if needed, usually passed as string for simple Apps Script)
-        // Note: Sending large base64 strings might hit limits. For this demo, we'll try to send it if it's small, 
-        // or just the name if logic requires more complex handling.
-        // For a robust solution, we'd upload to Drive separately, but here we'll try to bundle.
-        if (photoInput.files.length > 0) {
-            const file = photoInput.files[0];
-            // Validate File Size (Max 2MB)
-            if (file.size > 2 * 1024 * 1024) {
-                alert('ไฟล์รูปภาพมีขนาดใหญ่เกินไป (ต้องไม่เกิน 2MB)');
-                loadingModal.style.display = 'none';
-                return;
-            }
-
-            try {
-                const base64 = await toBase64(file);
-                data['studentPhotoBase64'] = base64; // Send base64 data
-                data['studentPhotoName'] = file.name;
-            } catch (error) {
-                console.error("Error converting image", error);
-                alert('เกิดข้อผิดพลาดในการอ่านไฟล์รูปภาพ');
-                loadingModal.style.display = 'none';
-                return;
-            }
+        // Handle Prefix 'other' merge logic for simpler backend handling
+        if (data['prefix'] === 'other' && data['prefixOther']) {
+            data['prefix'] = data['prefixOther'];
         }
 
-        // Special handling for checkboxes/radios that might not be in formData if unchecked (though required ones will be)
-        // Manually collecting some complex fields if needed, but FormData usually covers named inputs.
+        // We leave vocationalMajor fields as separate keys in 'data' object.
+        // Google Script will receive: vocationalType, vocationalMajorBusiness, vocationalMajorTechnical
 
         try {
-            // In a real scenario, we use fetch. 
-            // Since we don't have the real URL yet, we will simulate a success for the UI demo.
+            // Check if URL is placeholder
             if (SCRIPT_URL === 'URL Plaese.....') {
                 console.warn("Script URL not set. Simulating success.");
                 await new Promise(r => setTimeout(r, 1500));
                 showSuccess();
             } else {
-                // Use no-cors mode to allow submission from file:// and arbitrary domains
-                // Add timeout to prevent hanging
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 seconds timeout
+                const timeoutId = setTimeout(() => controller.abort(), 30000);
 
                 try {
                     await fetch(SCRIPT_URL, {
@@ -100,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         mode: 'no-cors',
                         cache: 'no-cache',
                         headers: {
-                            'Content-Type': 'text/plain' // Use text/plain for no-cors to avoid preflight issues
+                            'Content-Type': 'text/plain'
                         },
                         redirect: 'follow',
                         body: JSON.stringify(data),
@@ -116,8 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     throw fetchError;
                 }
 
-                // With 'no-cors', we cannot access the response status or body.
-                // We assume if the fetch didn't throw a network error, it was sent.
                 showSuccess();
             }
 
@@ -132,16 +162,33 @@ document.addEventListener('DOMContentLoaded', () => {
         loadingModal.style.display = 'none';
         successModal.style.display = 'flex';
         form.reset();
-        photoPreview.innerHTML = '<i class="fas fa-cloud-upload-alt"></i><span>คลิกเพื่ออัปโหลดรูปภาพ</span>';
-    }
 
-    // Helper: Convert file to Base64
-    const toBase64 = file => new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-    });
+        // Reset UI states
+        if (prefixOtherInput) prefixOtherInput.style.display = 'none';
+
+        // Reset vocational inputs
+        if (majorBusinessInput) {
+            majorBusinessInput.style.display = 'none';
+            majorBusinessInput.required = false;
+        }
+        if (majorTechnicalInput) {
+            majorTechnicalInput.style.display = 'none';
+            majorTechnicalInput.required = false;
+        }
+        if (labelMajorBusiness) labelMajorBusiness.style.display = 'none';
+        if (labelMajorTechnical) labelMajorTechnical.style.display = 'none';
+
+        // Re-set defaults
+        if (applyDateInput) {
+            const y = today.getFullYear();
+            const m = String(today.getMonth() + 1).padStart(2, '0');
+            const d = String(today.getDate()).padStart(2, '0');
+            applyDateInput.value = `${y}-${m}-${d}`;
+        }
+        if (academicYearInput) {
+            academicYearInput.value = today.getFullYear() + 543;
+        }
+    }
 });
 
 function closeModal() {

@@ -54,7 +54,7 @@
                     </div>
                     <div class="form-group">
                         <label for="academicYear">ปีการศึกษา</label>
-                        <input type="text" id="academicYear" name="academicYear" placeholder="เช่น 2567" required>
+                        <input type="text" id="academicYear" name="academicYear" readonly>
                     </div>
                 </div>
 
@@ -104,26 +104,20 @@
             <div class="form-section">
                 <h3 class="section-title"><i class="fas fa-address-card"></i> ข้อมูลส่วนตัว</h3>
 
-                <div class="form-group upload-group">
-                    <label for="studentPhoto">รูปถ่ายหน้าตรง (ถ้ามี)</label>
-                    <div class="file-upload-wrapper">
-                        <input type="file" id="studentPhoto" name="studentPhoto" accept="image/*">
-                        <div class="upload-preview" id="photoPreview">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <span>คลิกเพื่ออัปโหลดรูปภาพ</span>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="grid-3">
                     <div class="form-group">
                         <label for="prefix">คำนำหน้า</label>
-                        <select id="prefix" name="prefix" required>
-                            <option value="">เลือกคำนำหน้า</option>
-                            <option value="นาย">นาย</option>
-                            <option value="นาง">นาง</option>
-                            <option value="นางสาว">นางสาว</option>
-                        </select>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <select id="prefix" name="prefix" required style="flex:1;">
+                                <option value="">เลือกคำนำหน้า</option>
+                                <option value="นาย">นาย</option>
+                                <option value="นาง">นาง</option>
+                                <option value="นางสาว">นางสาว</option>
+                                <option value="other">เพศอื่น ๆ</option>
+                            </select>
+                            <input type="text" id="prefixOther" name="prefixOther" placeholder="ระบุคำนำหน้า"
+                                style="display:none; flex:1; min-width: 120px;">
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="firstName">ชื่อ</label>
@@ -188,334 +182,367 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="birthPlace">สถานที่เกิด (รพ./ตำบล/อำเภอ/จังหวัด)</label>
-                    <input type="text" id="birthPlace" name="birthPlace">
+                    <div class="form-group">
+                        <h3>สถานที่เกิด</h3>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label for="birthHospital">โรงพยาบาล/สถานที่</label>
+                                <input type="text" id="birthHospital" name="birthHospital">
+                            </div>
+                            <div class="form-group">
+                                <label for="birthSubdistrict">ตำบล/แขวง</label>
+                                <input type="text" id="birthSubdistrict" name="birthSubdistrict">
+                            </div>
+                        </div>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label for="birthDistrict">อำเภอ/เขต</label>
+                                <input type="text" id="birthDistrict" name="birthDistrict">
+                            </div>
+                            <div class="form-group">
+                                <label for="birthProvince">จังหวัด</label>
+                                <input type="text" id="birthProvince" name="birthProvince">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label-header">พี่น้อง</label>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label for="siblingsBase">จำนวนพี่น้องทั้งหมด (รวมผู้สมัคร)</label>
+                                <input type="number" id="siblings" name="siblings" placeholder="คน">
+                            </div>
+                            <div class="form-group">
+                                <label for="siblingOrder">เป็นบุตรคนที่</label>
+                                <input type="number" id="childOrder" name="childOrder">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="siblingsInBCT">พี่น้องที่เรียนที่วิทยาลัยนี้ (คน)</label>
+                            <input type="number" id="siblingsInBCT" name="siblingsInBCT" value="0">
+                        </div>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="label-header">พี่น้อง</label>
+                <!-- Section 3: ที่อยู่และการติดต่อ -->
+                <div class="form-section">
+                    <h3 class="section-title"><i class="fas fa-home"></i> ที่อยู่ตามทะเบียนบ้าน</h3>
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label for="addressNo">เลขที่</label>
+                            <input type="text" id="addressNo" name="addressNo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="moo">หมู่</label>
+                            <input type="text" id="moo" name="moo">
+                        </div>
+                        <div class="form-group">
+                            <label for="soi">ตรอก/ซอย</label>
+                            <input type="text" id="soi" name="soi">
+                        </div>
+                    </div>
                     <div class="grid-2">
                         <div class="form-group">
-                            <label for="siblingsBase">จำนวนพี่น้องทั้งหมด (รวมผู้สมัคร)</label>
-                            <input type="number" id="siblings" name="siblings" placeholder="คน">
+                            <label for="road">ถนน</label>
+                            <input type="text" id="road" name="road">
                         </div>
                         <div class="form-group">
-                            <label for="siblingOrder">เป็นบุตรคนที่</label>
-                            <input type="number" id="childOrder" name="childOrder">
+                            <label for="subdistrict">ตำบล/แขวง</label>
+                            <input type="text" id="subdistrict" name="subdistrict" required>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="siblingsInBCT">พี่น้องที่เรียนที่วิทยาลัยนี้ (คน)</label>
-                        <input type="number" id="siblingsInBCT" name="siblingsInBCT" value="0">
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label for="district">อำเภอ/เขต</label>
+                            <input type="text" id="district" name="district" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="province">จังหวัด</label>
+                            <input type="text" id="province" name="province" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="zipcode">รหัสไปรษณีย์</label>
+                            <input type="text" id="zipcode" name="zipcode" required>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Section 3: ที่อยู่และการติดต่อ -->
-            <div class="form-section">
-                <h3 class="section-title"><i class="fas fa-home"></i> ที่อยู่ตามทะเบียนบ้าน</h3>
-                <div class="grid-3">
-                    <div class="form-group">
-                        <label for="addressNo">เลขที่</label>
-                        <input type="text" id="addressNo" name="addressNo" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="moo">หมู่</label>
-                        <input type="text" id="moo" name="moo">
-                    </div>
-                    <div class="form-group">
-                        <label for="soi">ตรอก/ซอย</label>
-                        <input type="text" id="soi" name="soi">
-                    </div>
-                </div>
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label for="road">ถนน</label>
-                        <input type="text" id="road" name="road">
-                    </div>
-                    <div class="form-group">
-                        <label for="subdistrict">ตำบล/แขวง</label>
-                        <input type="text" id="subdistrict" name="subdistrict" required>
-                    </div>
-                </div>
-                <div class="grid-3">
-                    <div class="form-group">
-                        <label for="district">อำเภอ/เขต</label>
-                        <input type="text" id="district" name="district" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="province">จังหวัด</label>
-                        <input type="text" id="province" name="province" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="zipcode">รหัสไปรษณีย์</label>
-                        <input type="text" id="zipcode" name="zipcode" required>
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label for="homePhone">โทรศัพท์บ้าน</label>
+                            <input type="tel" id="homePhone" name="homePhone">
+                        </div>
+                        <div class="form-group">
+                            <label for="mobilePhone">โทรศัพท์มือถือ</label>
+                            <input type="tel" id="mobilePhone" name="mobilePhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">E-mail</label>
+                            <input type="email" id="email" name="email">
+                        </div>
                     </div>
                 </div>
 
-                <div class="grid-3">
-                    <div class="form-group">
-                        <label for="homePhone">โทรศัพท์บ้าน</label>
-                        <input type="tel" id="homePhone" name="homePhone">
-                    </div>
-                    <div class="form-group">
-                        <label for="mobilePhone">โทรศัพท์มือถือ</label>
-                        <input type="tel" id="mobilePhone" name="mobilePhone" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">E-mail</label>
-                        <input type="email" id="email" name="email">
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section 4: ประวัติการศึกษา -->
-            <div class="form-section">
-                <h3 class="section-title"><i class="fas fa-graduation-cap"></i> ประวัติการศึกษาเดิม</h3>
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label class="label-header">จบการศึกษาระดับ</label>
-                        <div class="radio-group-tile two-cols">
-                            <label class="radio-tile">
-                                <input type="radio" name="prevGradLevel" value="ม.6">
-                                <div class="tile-content">
-                                    <span>ม.6</span>
+                <!-- Section 4: ประวัติการศึกษา -->
+                <div class="form-section">
+                    <h3 class="section-title"><i class="fas fa-graduation-cap"></i> ประวัติการศึกษาเดิม</h3>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label class="label-header">จบการศึกษาระดับ</label>
+                            <div class="radio-group-tile two-cols">
+                                <label class="radio-tile">
+                                    <input type="radio" name="prevGradLevel" value="ม.6">
+                                    <div class="tile-content">
+                                        <span>ม.6</span>
+                                    </div>
+                                </label>
+                                <label class="radio-tile">
+                                    <input type="radio" name="prevGradLevel" value="ปวช.3">
+                                    <div class="tile-content">
+                                        <span>ปวช.3</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group" id="vocationalTypeGroup">
+                            <label class="label-header">สายการเรียน (กรณี ปวช.)</label>
+                            <div class="vocational-options">
+                                <div class="vocational-option"
+                                    style="margin-bottom: 10px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                    <label style="margin:0; white-space: nowrap;">
+                                        <input type="radio" name="vocationalType" value="สายบริหารธุรกิจ">
+                                        สายบริหารธุรกิจ
+                                    </label>
+                                    <span id="labelMajorBusiness" style="display:none;">สาขา</span>
+                                    <input type="text" id="vocationalMajorBusiness" name="vocationalMajorBusiness"
+                                        placeholder="ระบุสาขา" style="display:none; flex: 1; min-width: 150px;">
                                 </div>
-                            </label>
-                            <label class="radio-tile">
-                                <input type="radio" name="prevGradLevel" value="ปวช.3">
-                                <div class="tile-content">
-                                    <span>ปวช.3</span>
+                                <div class="vocational-option"
+                                    style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                                    <label style="margin:0; white-space: nowrap;">
+                                        <input type="radio" name="vocationalType" value="สายช่าง">
+                                        สายช่าง
+                                    </label>
+                                    <span id="labelMajorTechnical" style="display:none;">สาขา</span>
+                                    <input type="text" id="vocationalMajorTechnical" name="vocationalMajorTechnical"
+                                        placeholder="ระบุสาขา" style="display:none; flex: 1; min-width: 150px;">
                                 </div>
+                            </div>
+                        </div>
+
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label for="gpa">เกรดเฉลี่ยสะสม (GPA)</label>
+                                <input type="text" id="gpa" name="gpa" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="prevSchool">โรงเรียนเดิม</label>
+                                <input type="text" id="prevSchool" name="prevSchool" required>
+                            </div>
+                        </div>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label for="prevSchoolDistrict">อำเภอที่ตั้งโรงเรียน</label>
+                                <input type="text" id="prevSchoolDistrict" name="prevSchoolDistrict">
+                            </div>
+                            <div class="form-group">
+                                <label for="prevSchoolProvince">จังหวัดที่ตั้งโรงเรียน</label>
+                                <input type="text" id="prevSchoolProvince" name="prevSchoolProvince">
+                            </div>
+                        </div>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label for="prevGradYear">ปีการศึกษาที่จบ</label>
+                                <input type="text" id="prevGradYear" name="prevGradYear">
+                            </div>
+                            <div class="form-group">
+                                <label for="prevGradDate">วันที่จบการศึกษา</label>
+                                <input type="date" id="prevGradDate" name="prevGradDate">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="label-header">ประเภทสถานศึกษาเดิม</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="prevSchoolType" value="รัฐบาล"> รัฐบาล</label>
+                                <label><input type="radio" name="prevSchoolType" value="เอกชน"> เอกชน</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 5: ข้อมูลครอบครัว -->
+                    <div class="form-section">
+                        <h3 class="section-title"><i class="fas fa-users"></i> ข้อมูลครอบครัว</h3>
+
+                        <!-- Father -->
+                        <h4 class="sub-title">ข้อมูลบิดา</h4>
+                        <div class="grid-3">
+                            <div class="form-group">
+                                <label for="fatherPrefix">คำนำหน้า</label>
+                                <input type="text" id="fatherPrefix" name="fatherPrefix">
+                            </div>
+                            <div class="form-group">
+                                <label for="fatherName">ชื่อ</label>
+                                <input type="text" id="fatherName" name="fatherName">
+                            </div>
+                            <div class="form-group">
+                                <label for="fatherLastname">นามสกุล</label>
+                                <input type="text" id="fatherLastname" name="fatherLastname">
+                            </div>
+                        </div>
+
+                        <div class="grid-3">
+                            <div class="form-group">
+                                <label for="fatherOccupation">อาชีพ</label>
+                                <input type="text" id="fatherOccupation" name="fatherOccupation">
+                            </div>
+                            <div class="form-group">
+                                <label for="fatherPhone">เบอร์โทรศัพท์</label>
+                                <input type="tel" id="fatherPhone" name="fatherPhone">
+                            </div>
+                            <div class="form-group">
+                                <label for="fatherIncome">รายได้ (ต่อเดือน)</label>
+                                <input type="text" id="fatherIncome" name="fatherIncome">
+                            </div>
+                        </div>
+
+                        <hr class="divider">
+
+                        <!-- Mother -->
+                        <h4 class="sub-title">ข้อมูลมารดา</h4>
+                        <div class="grid-3">
+                            <div class="form-group">
+                                <label for="motherPrefix">คำนำหน้า</label>
+                                <input type="text" id="motherPrefix" name="motherPrefix">
+                            </div>
+                            <div class="form-group">
+                                <label for="motherName">ชื่อ</label>
+                                <input type="text" id="motherName" name="motherName">
+                            </div>
+                            <div class="form-group">
+                                <label for="motherLastname">นามสกุล</label>
+                                <input type="text" id="motherLastname" name="motherLastname">
+                            </div>
+                        </div>
+
+                        <div class="grid-3">
+                            <div class="form-group">
+                                <label for="motherOccupation">อาชีพ</label>
+                                <input type="text" id="motherOccupation" name="motherOccupation">
+                            </div>
+                            <div class="form-group">
+                                <label for="motherPhone">เบอร์โทรศัพท์</label>
+                                <input type="tel" id="motherPhone" name="motherPhone">
+                            </div>
+                            <div class="form-group">
+                                <label for="motherIncome">รายได้ (ต่อเดือน)</label>
+                                <input type="text" id="motherIncome" name="motherIncome">
+                            </div>
+                        </div>
+
+                        <div class="form-group mt-2">
+                            <label class="label-header">สถานภาพบิดามารดา</label>
+                            <div class="radio-group grid-3-mobile">
+                                <label><input type="radio" name="parentsStatus" value="อยู่ด้วยกัน"> อยู่ด้วยกัน</label>
+                                <label><input type="radio" name="parentsStatus" value="แยกกันอยู่"> แยกกันอยู่</label>
+                                <label><input type="radio" name="parentsStatus" value="หย่าร้าง"> หย่าร้าง</label>
+                                <label><input type="radio" name="parentsStatus" value="บิดาถึงแก่กรรม">
+                                    บิดาถึงแก่กรรม</label>
+                                <label><input type="radio" name="parentsStatus" value="มารดาถึงแก่กรรม">
+                                    มารดาถึงแก่กรรม</label>
+                                <label><input type="radio" name="parentsStatus" value="แต่งงานใหม่">
+                                    บิดาหรือมารดาแต่งงานใหม่</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 6: ข้อมูลเพิ่มเติม -->
+                    <div class="form-section">
+                        <h3 class="section-title"><i class="fas fa-info-circle"></i> ข้อมูลเพิ่มเติม</h3>
+
+                        <div class="form-group">
+                            <label for="disease">โรคประจำตัว (ถ้าไม่มีให้ขีด -)</label>
+                            <input type="text" id="disease" name="disease">
+                        </div>
+                        <div class="form-group">
+                            <label for="talent">ความสามารถพิเศษ</label>
+                            <input type="text" id="talent" name="talent">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="currentJob">การทำงานปัจจุบัน (ถ้ามี)</label>
+                            <input type="text" id="currentJob" name="currentJob" placeholder="อาชีพ / ลักษณะงาน">
+                        </div>
+                        <div class="grid-2">
+                            <div class="form-group">
+                                <label for="jobIncome">รายได้ (บาท/เดือน)</label>
+                                <input type="text" id="jobIncome" name="jobIncome">
+                            </div>
+                            <div class="form-group">
+                                <label for="workplacePhone">เบอร์ที่ทำงาน</label>
+                                <input type="tel" id="workplacePhone" name="workplacePhone">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="reason">สาเหตุที่เลือกเรียนวิทยาลัยนี้</label>
+                            <textarea id="reason" name="reason" rows="2"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="futureGoal">เมื่อจบแล้วจะนำวุฒิไปทำอะไร</label>
+                            <textarea id="futureGoal" name="futureGoal" rows="2"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="wantedSkills">ทักษะ/ความรู้ที่ต้องการได้รับ (ตอบได้มากกว่า 1 ข้อ)</label>
+                            <textarea id="wantedSkills" name="wantedSkills" rows="2"
+                                placeholder="เช่น การเขียนโปรแกรม, การทำบัญชีดิจิทัล"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="label-header">ประวัติกองทุน กยศ.</label>
+                            <div class="radio-group">
+                                <label>เคยยืม กยศ. หรือไม่?</label>
+                                <label><input type="radio" name="loanHistory" value="ไม่เคย"> ไม่เคย</label>
+                                <label><input type="radio" name="loanHistory" value="เคย"> เคย (ระบุสถาบันเดิม) <input
+                                        type="text" name="loanHistoryNote" class="inline-input"></label>
+                            </div>
+                            <div class="radio-group mt-1">
+                                <label>มีความประสงค์กู้ กยศ. หรือไม่?</label>
+                                <label><input type="radio" name="loanRequest" value="ต้องการ"> ต้องการ</label>
+                                <label><input type="radio" name="loanRequest" value="ไม่ต้องการ"> ไม่ต้องการ</label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="recommender">ผู้แนะนำ</label>
+                            <input type="text" id="recommender" name="recommender">
+                        </div>
+                    </div>
+
+                    <!-- Terms -->
+                    <div class="form-section terms-section">
+                        <div class="terms-content">
+                            <p>ข้าพเจ้าขอรับรองว่าข้าพเจ้ามีคุณสมบัติครบถ้วนในการเป็นนักเรียน-นักศึกษาตามที่กำหนดไว้และขอรับรองว่าข้อความที่กรอกในใบสมัครและเอกสารที่นำมาแสดงเป็นความจริง
+                                หากมีการตรวจสอบพบว่า ขาดคุณสมบัติ หรือข้อความที่กรอก หรือเอกสารเป็นเท็จ
+                                และเมื่อเข้าเป็นนักเรียน-นักศึกษาไม่ปฏิบัติตามระเบียบของโรงเรียน
+                                ข้าพเจ้ายินยอมให้เพิกถอนสิทธิ์การเข้าศึกษาโดยไม่มีข้อขัดแย้ง หรือข้อเรียกร้องใด ๆ
+                                ทั้งสิ้น</p>
+                        </div>
+                        <div class="checkbox-wrapper">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="acceptTerms" required>
+                                <span class="checkmark"></span>
+                                ข้าพเจ้าขอรับรองว่าข้อมูลที่ได้แจ้งไว้ข้างต้นเป็นความจริงทุกประการ
                             </label>
                         </div>
                     </div>
-                    <div class="form-group" id="vocationalTypeGroup">
-                        <label class="label-header">สายการเรียน (กรณี ปวช.)</label>
-                        <div class="radio-group">
-                            <label><input type="radio" name="vocationalType" value="สายพาณิชยกรรม">
-                                สายพาณิชยกรรม</label>
-                            <label><input type="radio" name="vocationalType" value="สายช่าง"> สายช่าง</label>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label for="gpa">เกรดเฉลี่ยสะสม (GPA)</label>
-                        <input type="text" id="gpa" name="gpa" required>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit">
+                            <span>ยืนยันการสมัคร</span>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <label for="prevSchool">โรงเรียนเดิม</label>
-                        <input type="text" id="prevSchool" name="prevSchool" required>
-                    </div>
-                </div>
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label for="prevSchoolDistrict">อำเภอที่ตั้งโรงเรียน</label>
-                        <input type="text" id="prevSchoolDistrict" name="prevSchoolDistrict">
-                    </div>
-                    <div class="form-group">
-                        <label for="prevSchoolProvince">จังหวัดที่ตั้งโรงเรียน</label>
-                        <input type="text" id="prevSchoolProvince" name="prevSchoolProvince">
-                    </div>
-                </div>
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label for="prevGradYear">ปีการศึกษาที่จบ</label>
-                        <input type="text" id="prevGradYear" name="prevGradYear">
-                    </div>
-                    <div class="form-group">
-                        <label for="prevGradDate">วันที่จบการศึกษา</label>
-                        <input type="date" id="prevGradDate" name="prevGradDate">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="label-header">ประเภทสถานศึกษาเดิม</label>
-                    <div class="radio-group">
-                        <label><input type="radio" name="prevSchoolType" value="รัฐบาล"> รัฐบาล</label>
-                        <label><input type="radio" name="prevSchoolType" value="เอกชน"> เอกชน</label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section 5: ข้อมูลครอบครัว -->
-            <div class="form-section">
-                <h3 class="section-title"><i class="fas fa-users"></i> ข้อมูลครอบครัว</h3>
-
-                <!-- Father -->
-                <h4 class="sub-title">ข้อมูลบิดา</h4>
-                <div class="grid-3">
-                    <div class="form-group">
-                        <label for="fatherPrefix">คำนำหน้า</label>
-                        <input type="text" id="fatherPrefix" name="fatherPrefix">
-                    </div>
-                    <div class="form-group">
-                        <label for="fatherName">ชื่อ</label>
-                        <input type="text" id="fatherName" name="fatherName">
-                    </div>
-                    <div class="form-group">
-                        <label for="fatherLastname">นามสกุล</label>
-                        <input type="text" id="fatherLastname" name="fatherLastname">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="fatherIdCard">เลขบัตรประชาชนบิดา</label>
-                    <input type="text" id="fatherIdCard" name="fatherIdCard" maxlength="13">
-                </div>
-                <div class="grid-3">
-                    <div class="form-group">
-                        <label for="fatherOccupation">อาชีพ</label>
-                        <input type="text" id="fatherOccupation" name="fatherOccupation">
-                    </div>
-                    <div class="form-group">
-                        <label for="fatherPhone">เบอร์โทรศัพท์</label>
-                        <input type="tel" id="fatherPhone" name="fatherPhone">
-                    </div>
-                    <div class="form-group">
-                        <label for="fatherIncome">รายได้ (ต่อเดือน)</label>
-                        <input type="text" id="fatherIncome" name="fatherIncome">
-                    </div>
-                </div>
-
-                <hr class="divider">
-
-                <!-- Mother -->
-                <h4 class="sub-title">ข้อมูลมารดา</h4>
-                <div class="grid-3">
-                    <div class="form-group">
-                        <label for="motherPrefix">คำนำหน้า</label>
-                        <input type="text" id="motherPrefix" name="motherPrefix">
-                    </div>
-                    <div class="form-group">
-                        <label for="motherName">ชื่อ</label>
-                        <input type="text" id="motherName" name="motherName">
-                    </div>
-                    <div class="form-group">
-                        <label for="motherLastname">นามสกุล</label>
-                        <input type="text" id="motherLastname" name="motherLastname">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="motherIdCard">เลขบัตรประชาชนมารดา</label>
-                    <input type="text" id="motherIdCard" name="motherIdCard" maxlength="13">
-                </div>
-                <div class="grid-3">
-                    <div class="form-group">
-                        <label for="motherOccupation">อาชีพ</label>
-                        <input type="text" id="motherOccupation" name="motherOccupation">
-                    </div>
-                    <div class="form-group">
-                        <label for="motherPhone">เบอร์โทรศัพท์</label>
-                        <input type="tel" id="motherPhone" name="motherPhone">
-                    </div>
-                    <div class="form-group">
-                        <label for="motherIncome">รายได้ (ต่อเดือน)</label>
-                        <input type="text" id="motherIncome" name="motherIncome">
-                    </div>
-                </div>
-
-                <div class="form-group mt-2">
-                    <label class="label-header">สถานภาพบิดามารดา</label>
-                    <div class="radio-group grid-3-mobile">
-                        <label><input type="radio" name="parentsStatus" value="อยู่ด้วยกัน"> อยู่ด้วยกัน</label>
-                        <label><input type="radio" name="parentsStatus" value="แยกกันอยู่"> แยกกันอยู่</label>
-                        <label><input type="radio" name="parentsStatus" value="หย่าร้าง"> หย่าร้าง</label>
-                        <label><input type="radio" name="parentsStatus" value="บิดาถึงแก่กรรม"> บิดาถึงแก่กรรม</label>
-                        <label><input type="radio" name="parentsStatus" value="มารดาถึงแก่กรรม"> มารดาถึงแก่กรรม</label>
-                        <label><input type="radio" name="parentsStatus" value="แต่งงานใหม่">
-                            บิดาหรือมารดาแต่งงานใหม่</label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Section 6: ข้อมูลเพิ่มเติม -->
-            <div class="form-section">
-                <h3 class="section-title"><i class="fas fa-info-circle"></i> ข้อมูลเพิ่มเติม</h3>
-
-                <div class="form-group">
-                    <label for="disease">โรคประจำตัว (ถ้าไม่มีให้ขีด -)</label>
-                    <input type="text" id="disease" name="disease">
-                </div>
-                <div class="form-group">
-                    <label for="talent">ความสามารถพิเศษ</label>
-                    <input type="text" id="talent" name="talent">
-                </div>
-
-                <div class="form-group">
-                    <label for="currentJob">การทำงานปัจจุบัน (ถ้ามี)</label>
-                    <input type="text" id="currentJob" name="currentJob" placeholder="อาชีพ / ลักษณะงาน">
-                </div>
-                <div class="grid-2">
-                    <div class="form-group">
-                        <label for="jobIncome">รายได้ (บาท/เดือน)</label>
-                        <input type="text" id="jobIncome" name="jobIncome">
-                    </div>
-                    <div class="form-group">
-                        <label for="workplacePhone">เบอร์ที่ทำงาน</label>
-                        <input type="tel" id="workplacePhone" name="workplacePhone">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="reason">สาเหตุที่เลือกเรียนวิทยาลัยนี้</label>
-                    <textarea id="reason" name="reason" rows="2"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="futureGoal">เมื่อจบแล้วจะนำวุฒิไปทำอะไร</label>
-                    <textarea id="futureGoal" name="futureGoal" rows="2"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label for="wantedSkills">ทักษะ/ความรู้ที่ต้องการได้รับ (ตอบได้มากกว่า 1 ข้อ)</label>
-                    <textarea id="wantedSkills" name="wantedSkills" rows="2"
-                        placeholder="เช่น การเขียนโปรแกรม, การทำบัญชีดิจิทัล"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label class="label-header">ประวัติกองทุน กยศ.</label>
-                    <div class="radio-group">
-                        <label>เคยยืม กยศ. หรือไม่?</label>
-                        <label><input type="radio" name="loanHistory" value="ไม่เคย"> ไม่เคย</label>
-                        <label><input type="radio" name="loanHistory" value="เคย"> เคย (ระบุสถาบันเดิม) <input
-                                type="text" name="loanHistoryNote" class="inline-input"></label>
-                    </div>
-                    <div class="radio-group mt-1">
-                        <label>มีความประสงค์กู้ กยศ. หรือไม่?</label>
-                        <label><input type="radio" name="loanRequest" value="ต้องการ"> ต้องการ</label>
-                        <label><input type="radio" name="loanRequest" value="ไม่ต้องการ"> ไม่ต้องการ</label>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="recommender">ผู้แนะนำ</label>
-                    <input type="text" id="recommender" name="recommender">
-                </div>
-            </div>
-
-            <!-- Terms -->
-            <div class="form-section terms-section">
-                <div class="terms-content">
-                    <p>ข้าพเจ้าขอรับรองว่าข้าพเจ้ามีคุณสมบัติครบถ้วนในการเป็นนักเรียน-นักศึกษาตามที่กำหนดไว้และขอรับรองว่าข้อความที่กรอกในใบสมัครและเอกสารที่นำมาแสดงเป็นความจริง
-                        หากมีการตรวจสอบพบว่า ขาดคุณสมบัติ หรือข้อความที่กรอก หรือเอกสารเป็นเท็จ
-                        และเมื่อเข้าเป็นนักเรียน-นักศึกษาไม่ปฏิบัติตามระเบียบของโรงเรียน
-                        ข้าพเจ้ายินยอมให้เพิกถอนสิทธิ์การเข้าศึกษาโดยไม่มีข้อขัดแย้ง หรือข้อเรียกร้องใด ๆ ทั้งสิ้น</p>
-                </div>
-                <div class="checkbox-wrapper">
-                    <label class="checkbox-container">
-                        <input type="checkbox" id="acceptTerms" required>
-                        <span class="checkmark"></span>
-                        ข้าพเจ้าขอรับรองว่าข้อมูลที่ได้แจ้งไว้ข้างต้นเป็นความจริงทุกประการ
-                    </label>
-                </div>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="btn-submit">
-                    <span>ยืนยันการสมัคร</span>
-                    <i class="fas fa-paper-plane"></i>
-                </button>
-            </div>
 
         </form>
     </main>
